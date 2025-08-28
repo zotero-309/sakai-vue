@@ -145,19 +145,9 @@ function calculateCustomerTotal(name) {
 <template>
     <div class="card">
         <div class="font-semibold text-xl mb-4">Filtering</div>
-        <DataTable
-            :value="customers1"
-            :paginator="true"
-            :rows="10"
-            dataKey="id"
-            :rowHover="true"
-            v-model:filters="filters1"
-            filterDisplay="menu"
-            :loading="loading1"
-            :filters="filters1"
-            :globalFilterFields="['name', 'country.name', 'representative.name', 'balance', 'status']"
-            showGridlines
-        >
+        <DataTable :value="customers1" :paginator="true" :rows="10" dataKey="id" :rowHover="true"
+            v-model:filters="filters1" filterDisplay="menu" :loading="loading1" :filters="filters1"
+            :globalFilterFields="['name', 'country.name', 'representative.name', 'balance', 'status']" showGridlines>
             <template #header>
                 <div class="flex justify-between">
                     <Button type="button" icon="pi pi-filter-slash" label="Clear" outlined @click="clearFilter()" />
@@ -171,47 +161,52 @@ function calculateCustomerTotal(name) {
             </template>
             <template #empty> No customers found. </template>
             <template #loading> Loading customers data. Please wait. </template>
-            <Column field="name" header="Name" style="min-width: 12rem">
+            <Column field="verified" header="Candidates" dataType="boolean" bodyClass="text-center"
+                style="min-width: 14rem">
                 <template #body="{ data }">
-                    {{ data.name }}
+                    <i class="pi mr-2"
+                        :class="{ 'pi-check-circle text-green-500 ': data.verified, 'pi-times-circle text-red-500': !data.verified }"></i>
+                        {{ data.name }}
                 </template>
                 <template #filter="{ filterModel }">
-                    <InputText v-model="filterModel.value" type="text" placeholder="Search by name" />
+                    <label for="verified-filter" class="font-bold"> Verified </label>
+                    <Checkbox v-model="filterModel.value" :indeterminate="filterModel.value === null" binary
+                        inputId="verified-filter" />
                 </template>
             </Column>
-            <Column header="Country" filterField="country.name" style="min-width: 12rem">
+            <Column field="verified" header="Payment" dataType="boolean" bodyClass="text-center"
+                style="min-width: 8rem">
                 <template #body="{ data }">
-                    <div class="flex items-center gap-2">
-                        <img alt="flag" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`flag flag-${data.country.code}`" style="width: 24px" />
-                        <span>{{ data.country.name }}</span>
-                    </div>
+                    <i class="pi"
+                        :class="{ 'pi-check-circle text-green-500 ': data.verified, 'pi-times-circle text-red-500': !data.verified }"></i>
                 </template>
                 <template #filter="{ filterModel }">
-                    <InputText v-model="filterModel.value" type="text" placeholder="Search by country" />
-                </template>
-                <template #filterclear="{ filterCallback }">
-                    <Button type="button" icon="pi pi-times" @click="filterCallback()" severity="secondary"></Button>
-                </template>
-                <template #filterapply="{ filterCallback }">
-                    <Button type="button" icon="pi pi-check" @click="filterCallback()" severity="success"></Button>
+                    <label for="verified-filter" class="font-bold"> Verified </label>
+                    <Checkbox v-model="filterModel.value" :indeterminate="filterModel.value === null" binary
+                        inputId="verified-filter" />
                 </template>
             </Column>
-            <Column header="Agent" filterField="representative" :showFilterMatchModes="false" :filterMenuStyle="{ width: '14rem' }" style="min-width: 14rem">
+            <Column field="verified" header="Education" dataType="boolean" bodyClass="text-center"
+                style="min-width: 8rem">
                 <template #body="{ data }">
-                    <div class="flex items-center gap-2">
-                        <img :alt="data.representative.name" :src="`https://primefaces.org/cdn/primevue/images/avatar/${data.representative.image}`" style="width: 32px" />
-                        <span>{{ data.representative.name }}</span>
-                    </div>
+                    <i class="pi"
+                        :class="{ 'pi-check-circle text-green-500 ': data.verified, 'pi-times-circle text-red-500': !data.verified }"></i>
                 </template>
                 <template #filter="{ filterModel }">
-                    <MultiSelect v-model="filterModel.value" :options="representatives" optionLabel="name" placeholder="Any">
-                        <template #option="slotProps">
-                            <div class="flex items-center gap-2">
-                                <img :alt="slotProps.option.name" :src="`https://primefaces.org/cdn/primevue/images/avatar/${slotProps.option.image}`" style="width: 32px" />
-                                <span>{{ slotProps.option.name }}</span>
-                            </div>
-                        </template>
-                    </MultiSelect>
+                    <label for="verified-filter" class="font-bold"> Verified </label>
+                    <Checkbox v-model="filterModel.value" :indeterminate="filterModel.value === null" binary
+                        inputId="verified-filter" />
+                </template>
+            </Column>
+            <Column field="verified" header="Others" dataType="boolean" bodyClass="text-center" style="min-width: 8rem">
+                <template #body="{ data }">
+                    <i class="pi"
+                        :class="{ 'pi-check-circle text-green-500 ': data.verified, 'pi-times-circle text-red-500': !data.verified }"></i>
+                </template>
+                <template #filter="{ filterModel }">
+                    <label for="verified-filter" class="font-bold"> Verified </label>
+                    <Checkbox v-model="filterModel.value" :indeterminate="filterModel.value === null" binary
+                        inputId="verified-filter" />
                 </template>
             </Column>
             <Column header="Date" filterField="date" dataType="date" style="min-width: 10rem">
@@ -222,14 +217,7 @@ function calculateCustomerTotal(name) {
                     <DatePicker v-model="filterModel.value" dateFormat="mm/dd/yy" placeholder="mm/dd/yyyy" />
                 </template>
             </Column>
-            <Column header="Balance" filterField="balance" dataType="numeric" style="min-width: 10rem">
-                <template #body="{ data }">
-                    {{ formatCurrency(data.balance) }}
-                </template>
-                <template #filter="{ filterModel }">
-                    <InputNumber v-model="filterModel.value" mode="currency" currency="USD" locale="en-US" />
-                </template>
-            </Column>
+
             <Column header="Status" field="status" :filterMenuStyle="{ width: '14rem' }" style="min-width: 12rem">
                 <template #body="{ data }">
                     <Tag :value="data.status" :severity="getSeverity(data.status)" />
@@ -254,13 +242,16 @@ function calculateCustomerTotal(name) {
                     </div>
                 </template>
             </Column>
-            <Column field="verified" header="Verified" dataType="boolean" bodyClass="text-center" style="min-width: 8rem">
+            <Column field="verified" header="Candidates" dataType="boolean" bodyClass="text-center"
+                style="min-width: 8rem">
                 <template #body="{ data }">
-                    <i class="pi" :class="{ 'pi-check-circle text-green-500 ': data.verified, 'pi-times-circle text-red-500': !data.verified }"></i>
+                    <i class="pi"
+                        :class="{ 'pi-check-circle text-green-500 ': data.verified, 'pi-times-circle text-red-500': !data.verified }"></i>
                 </template>
                 <template #filter="{ filterModel }">
                     <label for="verified-filter" class="font-bold"> Verified </label>
-                    <Checkbox v-model="filterModel.value" :indeterminate="filterModel.value === null" binary inputId="verified-filter" />
+                    <Checkbox v-model="filterModel.value" :indeterminate="filterModel.value === null" binary
+                        inputId="verified-filter" />
                 </template>
             </Column>
         </DataTable>
@@ -279,7 +270,8 @@ function calculateCustomerTotal(name) {
             <Column field="name" header="Name"></Column>
             <Column header="Image">
                 <template #body="slotProps">
-                    <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`" :alt="slotProps.data.image" class="shadow-lg" width="64" />
+                    <img :src="`https://primefaces.org/cdn/primevue/images/product/${slotProps.data.image}`"
+                        :alt="slotProps.data.image" class="shadow-lg" width="64" />
                 </template>
             </Column>
             <Column field="price" header="Price">
@@ -312,7 +304,8 @@ function calculateCustomerTotal(name) {
                         </Column>
                         <Column field="status" header="Status" sortable>
                             <template #body="slotProps">
-                                <Tag :value="slotProps.data.status.toLowerCase()" :severity="getOrderSeverity(slotProps.data)" />
+                                <Tag :value="slotProps.data.status.toLowerCase()"
+                                    :severity="getOrderSeverity(slotProps.data)" />
                             </template>
                         </Column>
                         <Column headerStyle="width:4rem">

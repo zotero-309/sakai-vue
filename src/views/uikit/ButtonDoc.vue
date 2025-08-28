@@ -120,6 +120,7 @@ function load(index) {
                     <Button icon="pi pi-star-fill" class="mr-2 mb-2"></Button>
                     <Button label="Bookmark" icon="pi pi-bookmark" class="mr-2 mb-2"></Button>
                     <Button label="Bookmark" icon="pi pi-bookmark" iconPos="right" class="mr-2 mb-2"></Button>
+                    <Button label="Approve" severity="danger" icon="pi pi-check" iconPos="right" class="mr-2 mb-2"></Button>
                 </div>
             </div>
             <div class="card flex flex-col gap-4">
